@@ -1,0 +1,28 @@
+steps:
+# Build image
+- name: gcr.io/cloud-builders/docker
+  args:
+    - build
+    - -t
+    - us-central1-docker.pkg.dev/swift-arcadia-484906-v2/gke-repo/myapp:$SHORT_SHA
+    - ./app
+
+# Push image
+- name: gcr.io/cloud-builders/docker
+  args:
+    - push
+    - us-central1-docker.pkg.dev/swift-arcadia-484906-v2/gke-repo/myapp:$SHORT_SHA
+
+# Create Cloud Deploy release
+- name: gcr.io/google.com/cloudsdktool/cloud-sdk
+  entrypoint: gcloud
+  args:
+    - deploy
+    - releases
+    - create
+    - release-$SHORT_SHA
+    - --delivery-pipeline=myapp-pipeline
+    - --region=us-central1
+    - --to-target=dev
+    - --images=myapp=us-central1-docker.pkg.dev/swift-arcadia-484906-v2/gke-repo/myapp:$SHORT_SHA
+    - --source=.

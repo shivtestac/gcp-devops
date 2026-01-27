@@ -1,7 +1,17 @@
 apiVersion: deploy.cloud.google.com/v1
 kind: Target
 metadata:
-  name: prod
+  name: dev
 description: Dev GKE cluster
+gke:
+  cluster: projects/swift-arcadia-484906-v2/locations/us-central1/clusters/k8
+
+
+---
+apiVersion: deploy.cloud.google.com/v1
+kind: Target
+metadata:
+  name: prod
+description: prod GKE cluster
 gke:
   cluster: projects/swift-arcadia-484906-v2/locations/us-central1/clusters/k8

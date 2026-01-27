@@ -4,4 +4,5 @@ metadata:
   name: myapp-pipeline
 serialPipeline:
   stages:
+  - targetId: dev
   - targetId: prod

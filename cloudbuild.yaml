@@ -58,3 +58,5 @@ steps:
         --to-target=$TARGET \
         --images=myapp=us-central1-docker.pkg.dev/swift-arcadia-484906-v2/gke-repo/myapp:$SHORT_SHA \
         --source=.
+options:
+  logging: CLOUD_LOGGING_ONLY

@@ -5,4 +5,6 @@ metadata:
 serialPipeline:
   stages:
   - targetId: dev
+    profiles: ["dev"]
   - targetId: prod
+    profiles: ["prod"]

@@ -43,10 +43,11 @@ steps:
   args:
     - -c
     - |
+      # Internal shell variable (no dollar sign during assignment)
       if [[ "$BRANCH_NAME" == "main" ]]; then
-        TARGET="prod"
+        DEPLOY_TARGET="prod"
       elif [[ "$BRANCH_NAME" == "dev" ]]; then
-        TARGET="dev"
+        DEPLOY_TARGET="dev"
       else
         echo "No deployment for this branch"
         exit 0
@@ -55,8 +56,10 @@ steps:
       gcloud deploy releases create release-$SHORT_SHA \
         --delivery-pipeline=myapp-pipeline \
         --region=us-central1 \
-        --to-target=$TARGET \
+        --to-target=$$DEPLOY_TARGET \
         --images=myapp=us-central1-docker.pkg.dev/swift-arcadia-484906-v2/gke-repo/myapp:$SHORT_SHA \
         --source=.
+
+# FIXED: Moved to the far left margin
 options:
   logging: CLOUD_LOGGING_ONLY

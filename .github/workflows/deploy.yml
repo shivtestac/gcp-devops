@@ -39,7 +39,11 @@ jobs:
         if: success()
         run: echo "🚀 Sample image pushed successfully to prod-gcr!"
 
-
+      - name: Get GKE Credentials
+        uses: google-github-actions/get-gke-credentials@v2
+        with:
+          cluster_name: 'gke-autopilot'
+          location: 'us-central1'
 
       - name: Deploy to GKE
         run: |

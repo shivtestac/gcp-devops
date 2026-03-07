@@ -31,8 +31,9 @@ jobs:
       # Build a dummy image and push it
       - name: Build and Push Sample
         run: |
-          docker build -t us-central1-docker.pkg.dev/bora999/prod-gcr/sample-test:v1 .
-          docker push us-central1-docker.pkg.dev/bora999/prod-gcr/sample-test:v1
+          IMAGE_TAG=${{ github.sha }}
+          docker build -t us-central1-docker.pkg.dev/bora999/prod-gcr/sample-test:$IMAGE_TAG .
+          docker push us-central1-docker.pkg.dev/bora999/prod-gcr/sample-test:$IMAGE_TAG
 
       - name: Final Status
         if: success()

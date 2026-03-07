@@ -1,0 +1,48 @@
+name: Build and Push to Artifact Registry
+
+on:
+  push:
+    branches:
+      - main  # Only runs when you push to the main branch
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    
+    # Required permissions for Workload Identity Federation
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 1. Authenticate to Google Cloud
+      - name: Authenticate to GCP
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          # Hardcoded Provider and Service Account
+          workload_identity_provider: 'projects/1054617119823/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
+          service_account: 'github-deployer@bora999.iam.gserviceaccount.com'
+
+      # 2. Authenticate Docker to your Registry
+      - name: Docker Auth
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev
+
+      # 3. Build and Push the Image
+      - name: Build and Push Image
+        id: docker_build
+        run: |
+          docker build -t us-central1-docker.pkg.dev/bora999/prod-gcr/monolithic-app:${{ github.sha }} .
+          docker push us-central1-docker.pkg.dev/bora999/prod-gcr/monolithic-app:${{ github.sha }}
+
+      # 4. Status Reporting
+      - name: Report Success
+        if: success()
+        run: echo "✅ SUCCESS: Image pushed to Artifact Registry with tag ${{ github.sha }}"
+
+      - name: Report Failure
+        if: failure()
+        run: echo "❌ FAILED: The build or push step failed. Check the logs above."

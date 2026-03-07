@@ -38,3 +38,13 @@ jobs:
       - name: Final Status
         if: success()
         run: echo "🚀 Sample image pushed successfully to prod-gcr!"
+
+
+
+      - name: Deploy to GKE
+        run: |
+          # 1. Export the tag so envsubst can see it
+          export IMAGE_TAG=${{ github.sha }}
+          # 2. Replace placeholder and apply in one go
+          # envsubst reads the file, replaces ${IMAGE_TAG}, and sends it to kubectl
+          envsubst < k8s/deployment.yaml | kubectl apply -f -

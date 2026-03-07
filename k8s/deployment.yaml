@@ -1,3 +1,23 @@
+#apiVersion: apps/v1
+#kind: Deployment
+#metadata:
+#  name: myapp
+#spec:
+#  replicas: 1
+#  selector:
+#    matchLabels:
+#      app: myapp
+#  template:
+#    metadata:
+#      labels:
+#        app: myapp
+#    spec:
+#      containers:
+#      - name: myapp
+#        image: myapp   # <-- Cloud Deploy replaces this
+#        ports:
+#        - containerPort: 8080
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -14,6 +34,7 @@ spec:
     spec:
       containers:
       - name: myapp
-        image: myapp   # <-- Cloud Deploy replaces this
+        # This is now a dynamic placeholder
+        image: us-central1-docker.pkg.dev/bora999/prod-gcr/sample-test:${IMAGE_TAG}
         ports:
         - containerPort: 8080

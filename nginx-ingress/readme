@@ -1,0 +1,14 @@
+first start geateway in 80 without any https section beacuse need to crete cert before and acme challeng need some gateway for complete 
+http challnege 
+
+
+so start GW in http first
+
+then certissuer manager
+
+then crete certficate issuer
+
+then ref that certficate in gateway https section 
+
+
+

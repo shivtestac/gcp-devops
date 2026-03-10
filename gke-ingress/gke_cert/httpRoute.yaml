@@ -1,0 +1,96 @@
+# --- PART 1: The Redirect (Infrastructure) ---
+
+#kind: HTTPRoute
+#apiVersion: gateway.networking.k8s.io/v1
+#metadata:
+#  name: http-to-https-redirect
+#spec:
+#  parentRefs:
+#  - name: external-http
+#    sectionName: http # This attaches ONLY to the Port 80 listener
+#  rules:
+#  - filters:
+#    - type: RequestRedirect
+#      requestRedirect:
+#        scheme: https
+#        statusCode: 301 # Permanent redirect for SEO and Browser cache
+
+
+
+
+
+#---
+# --- PART 2: The Application Routing (Business Logic) ---
+# kesh-project-route.yaml
+kind: HTTPRoute
+apiVersion: gateway.networking.k8s.io/v1
+metadata:
+  name: kesh-route
+spec:
+  parentRefs:
+  - name: external-http
+    sectionName: https
+  hostnames:
+  - "kesh999.org"
+  - "api.kesh999.org"
+  - "dev.kesh999.org"
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /v1
+    backendRefs:
+    - name: apache-service
+      port: 80
+  - backendRefs:
+    - name: nginx-service
+      port: 80
+
+---
+
+# fakr-project-route.yaml
+kind: HTTPRoute
+apiVersion: gateway.networking.k8s.io/v1
+metadata:
+  name: fakr-route
+spec:
+  parentRefs:
+  - name: external-http
+    sectionName: https
+  hostnames:
+  - "fakr.co.in"
+  rules:
+  # 1. fakr.co.in/nginx -> strips "/nginx", calls nginx-service at "/"
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /nginx
+    filters:
+    - type: URLRewrite
+      urlRewrite:
+        path:
+          type: ReplacePrefixMatch
+          replacePrefixMatch: /
+    backendRefs:
+    - name: nginx-service
+      port: 80
+
+  # 2. fakr.co.in/apache -> strips "/apache", calls apache-service at "/"
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /apache
+    filters:
+    - type: URLRewrite
+      urlRewrite:
+        path:
+          type: ReplacePrefixMatch
+          replacePrefixMatch: /
+    backendRefs:
+    - name: apache-service
+      port: 80
+
+  # 3. Default (fakr.co.in/) -> apache-service
+  - backendRefs:
+    - name: apache-service
+      port: 80

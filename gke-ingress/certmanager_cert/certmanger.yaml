@@ -1,0 +1,20 @@
+# ---------------------------------------------------------
+# 🌍 ClusterIssuer for Let's Encrypt (Production)
+# ---------------------------------------------------------
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+spec:
+  acme:
+    email: youremail@domain.com # << REQUIRED - CHANGE THIS
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: letsencrypt-prod-key
+    solvers:
+      - http01:
+          gatewayHTTPRoute:
+            parentRefs:
+              - name: external-http # your gateway
+                namespace: default # gateway namespace
+

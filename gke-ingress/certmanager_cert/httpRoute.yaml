@@ -1,0 +1,61 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: fakr-route
+spec:
+  parentRefs:
+  - name: external-http
+  hostnames:
+  - fakr.co.in
+
+  rules:
+  - backendRefs:
+    - name: apache-service
+      port: 80
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: kesh-root-route
+spec:
+  parentRefs:
+  - name: external-http
+  hostnames:
+  - kesh999.org
+
+  rules:
+  - backendRefs:
+    - name: nginx-service
+      port: 80
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: dev-route
+spec:
+  parentRefs:
+  - name: external-http
+
+  hostnames:
+  - dev.kesh999.org
+
+  rules:
+  - backendRefs:
+    - name: apache-service
+      port: 80
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: api-route
+spec:
+  parentRefs:
+  - name: external-http
+
+  hostnames:
+  - api.kesh999.org
+
+  rules:
+  - backendRefs:
+    - name: nginx-service
+      port: 80

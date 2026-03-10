@@ -1,0 +1,55 @@
+# gateway.yaml
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: external-http
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  gatewayClassName: gke-l7-global-external-managed
+  addresses:
+  - type: NamedAddress
+    value: ingress 
+  listeners:
+  - name: http
+    protocol: HTTP
+    port: 80
+    allowedRoutes:
+      namespaces:
+        from: All
+
+  - name: https-fakr
+    protocol: HTTPS
+    port: 443
+    hostname: fakr.co.in
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - name: fakr-tls
+    allowedRoutes:
+      namespaces:
+        from: All
+
+  - name: https-root
+    protocol: HTTPS
+    port: 443
+    hostname: kesh999.org
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - name: kesh-root-tls
+    allowedRoutes:
+      namespaces:
+        from: All
+
+  - name: https-sub
+    protocol: HTTPS
+    port: 443
+    hostname: "*.kesh999.org"
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - name: kesh-subdomains-tls
+    allowedRoutes:
+      namespaces:
+        from: All

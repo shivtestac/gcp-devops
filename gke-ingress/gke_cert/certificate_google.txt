@@ -1,0 +1,63 @@
+Action,Command
+List,gcloud certificate-manager certificates list
+Describe,gcloud certificate-manager certificates describe cert-kesh
+Create,"gcloud certificate-manager certificates create cert-kesh --domains=""kesh999.org,api.kesh999.org"" --location=global"
+Delete,gcloud certificate-manager certificates delete cert-kesh
+
+Action,Command
+List,gcloud certificate-manager maps list
+Describe,gcloud certificate-manager maps describe my-cert-map
+Create,gcloud certificate-manager maps create my-cert-map
+Delete,gcloud certificate-manager maps delete my-cert-map
+
+Action,Command
+List Entries,gcloud certificate-manager maps entries list --map=my-cert-map
+Create Entry,"gcloud certificate-manager maps entries create entry-name --map=my-cert-map --hostname=""example.com"" --certificates=cert-name"
+Delete Entry,gcloud certificate-manager maps entries delete entry-name --map=my-cert-map
+
+
+
+gcloud certificate-manager certificates create cert-kesh \
+    --domains="kesh999.org,api.kesh999.org,dev.kesh999.org" \
+    --location=global
+
+# 1. For the Root Domain
+gcloud certificate-manager maps entries create entry-kesh-root \
+    --map=my-cert-map \
+    --hostname="kesh999.org" \
+    --certificates=cert-kesh \
+    --location=global
+
+# 2. For the API Subdomain
+gcloud certificate-manager maps entries create entry-api \
+    --map=my-cert-map \
+    --hostname="api.kesh999.org" \
+    --certificates=cert-kesh \
+    --location=global
+
+# 3. For the Dev Subdomain
+gcloud certificate-manager maps entries create entry-dev \
+    --map=my-cert-map \
+    --hostname="dev.kesh999.org" \
+    --certificates=cert-kesh \
+    --location=global
+
+
+gcloud certificate-manager certificates describe cert-kesh
+
+
+
+san@Louis:~/gcp-devops/gke-ingress$ gcloud certificate-manager maps entries list --map=my-cert-map
+NAME             DESCRIPTION  HOSTNAME         MATCHER  CERTIFICATES  STATE   CREATE_TIME
+entry-api                     api.kesh999.org           cert-kesh     ACTIVE  2026-03-10 06:55:19 +00:00
+entry-dev                     dev.kesh999.org           cert-kesh     ACTIVE  2026-03-10 06:55:24 +00:00
+entry-fakr                    fakr.co.in                cert-fakr     ACTIVE  2026-03-10 05:52:58 +00:00
+entry-kesh-root               kesh999.org               cert-kesh     ACTIVE  2026-03-10 06:55:14 +00:00
+san@Louis:~/gcp-devops/gke-ingress$ 
+
+
+
+ gcloud certificate-manager certificates describe cert-kesh
+
+
+

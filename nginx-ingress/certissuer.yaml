@@ -1,0 +1,36 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cert-kesh-root
+spec:
+  secretName: kesh-root-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+  - kesh999.org
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cert-kesh-subdomains
+spec:
+  secretName: kesh-subdomains-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+  - api.kesh999.org
+  - dev.kesh999.org
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cert-fakr
+spec:
+  secretName: fakr-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+  - fakr.co.in

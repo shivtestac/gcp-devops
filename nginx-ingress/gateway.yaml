@@ -1,4 +1,3 @@
-# gateway.yaml
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
@@ -6,10 +5,10 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
-  gatewayClassName: gke-l7-global-external-managed
-  addresses:
-  - type: NamedAddress
-    value: ingress 
+  gatewayClassName: nginx
+#  addresses:
+#  - type: IPAddress
+#    value: 34.49.16.65 
   listeners:
   - name: http
     protocol: HTTP

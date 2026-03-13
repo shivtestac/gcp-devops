@@ -1,0 +1,27 @@
+apiVersion: gateway.nginx.org/v1alpha2
+kind: NginxProxy
+metadata:
+  name: ngf-proxy
+  namespace: nginx-gateway
+
+spec:
+  ipFamily: ipv4
+
+  kubernetes:
+    service:
+      type: LoadBalancer
+      patches:
+      - type: StrategicMerge
+        value:
+          metadata:
+            annotations:
+              cloud.google.com/load-balancer-type: "External"
+          spec:
+            loadBalancerIP: "136.116.244.237"
+
+    deployment:
+      replicas: 2
+
+  logging:
+    accessLog:
+      format: '$remote_addr - [$time_local] "$request" $status'

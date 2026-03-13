@@ -1,0 +1,12 @@
+nginx:
+  service:
+    type: LoadBalancer
+    loadBalancerIP: 34.49.16.65
+    externalTrafficPolicy: Local
+
+nginxGateway:
+  gatewayClassName: nginx
+  # This makes troubleshooting easier
+  config:
+    logging:
+      level: debug
